@@ -7,6 +7,8 @@ import android.os.PersistableBundle;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 
+import com.umeng.analytics.MobclickAgent;
+
 /**
  * Created by dcy123 on 2015/10/19.
  */
@@ -22,5 +24,17 @@ public class BaseActivity extends Activity{
         mInflater = LayoutInflater.from(this);
         rootView = new LinearLayout(this);
         rootView.setOrientation(LinearLayout.VERTICAL);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }
