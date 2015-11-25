@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.dcy.coolgame.R;
+import com.dcy.coolgame.view.ColourImageView;
 import com.dcy.coolgame.view.DrawGameView;
 
 /**
@@ -20,6 +21,7 @@ public class DrawSelfActivity extends BaseActivity implements View.OnClickListen
         mDrawView = (DrawGameView) findViewById(R.id.view_draw);
         findViewById(R.id.btn_clear).setOnClickListener(this);
 //        findViewById(R.id.iv_show).setOnClickListener(this);
+        findViewById(R.id.btn_ok).setOnClickListener(this);
     }
 
     @Override
@@ -27,9 +29,14 @@ public class DrawSelfActivity extends BaseActivity implements View.OnClickListen
         switch (view.getId()){
             case R.id.btn_clear:
                 mDrawView.clear();
+                ((ColourImageView)findViewById(R.id.iv_show)).clear();
+//                findViewById(R.id.iv_show).invalidate();
                 break;
             case R.id.iv_show:
                 ((ImageView)view).setImageBitmap(mDrawView.getBitmap());
+                break;
+            case R.id.btn_ok:
+                ((ColourImageView)findViewById(R.id.iv_show)).setImageBitmap(mDrawView.getBitmap());
                 break;
         }
     }

@@ -3,10 +3,12 @@ package com.dcy.coolgame.view;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.ImageView;
 
@@ -18,7 +20,8 @@ import java.util.Stack;
 public class ColourImageView extends ImageView
 {
 
-    private Bitmap mBitmap;
+    private Bitmap mOriginBitmap;
+    private Bitmap mCustomBitmap;
     /**
      * 边界的颜色
      */
@@ -37,7 +40,10 @@ public class ColourImageView extends ImageView
         hasBorderColor = (mBorderColor != -1);
 
         ta.recycle();
+    }
 
+    public void clear(){
+        setImageBitmap(mOriginBitmap);
     }
 
     @Override
@@ -45,17 +51,35 @@ public class ColourImageView extends ImageView
     {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
-        int viewWidth = getMeasuredWidth();
-        int viewHeight = getMeasuredHeight();
+        Log.i("mylog", "on Measure >>>>>>>>>>>>>> ");
+        if(getDrawable() != null){
+            Log.i("mylog", "2222222222222222222222222222");
+            int viewWidth = getMeasuredWidth();
+            int viewHeight = getMeasuredHeight();
 
-        //以宽度为标准，等比例缩放view的高度
-        setMeasuredDimension(viewWidth,
-                getDrawable().getIntrinsicHeight() * viewWidth / getDrawable().getIntrinsicWidth());
+            //以宽度为标准，等比例缩放view的高度
+            setMeasuredDimension(viewWidth,
+                    getDrawable().getIntrinsicHeight() * viewWidth / getDrawable().getIntrinsicWidth());
 
-        //根据drawable，去得到一个和view一样大小的bitmap
-        BitmapDrawable drawable = (BitmapDrawable) getDrawable();
-        Bitmap bm = drawable.getBitmap();
-        mBitmap = Bitmap.createScaledBitmap(bm, getMeasuredWidth(), getMeasuredHeight(), false);
+            //根据drawable，去得到一个和view一样大小的bitmap
+            BitmapDrawable drawable = (BitmapDrawable) getDrawable();
+            Bitmap bm = drawable.getBitmap();
+            mOriginBitmap = Bitmap.createScaledBitmap(bm, getMeasuredWidth(), getMeasuredHeight(), false);
+            mCustomBitmap = Bitmap.createBitmap(mOriginBitmap);
+            Log.i("mylog", "222222222222222222222222222222222");
+        }
+    }
+
+    public void setOriginBitmap(Bitmap bitmap){
+        Log.i("mylog", "1111111111111111111111111111111");
+//        this.mOriginBitmap = bitmap;
+//        mCustomBitmap = Bitmap.createBitmap(mOriginBitmap);
+//        setImageBitmap(mOriginBitmap);
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
     }
 
     @Override
@@ -72,6 +96,13 @@ public class ColourImageView extends ImageView
         return super.onTouchEvent(event);
     }
 
+    @Override
+    public void setImageBitmap(Bitmap bm) {
+//        mOriginBitmap = bm;
+//        mCustomBitmap = Bitmap.createBitmap(mOriginBitmap);
+        super.setImageBitmap(bm);
+    }
+
     /**
      * 根据x,y获得改点颜色，进行填充
      *
@@ -80,26 +111,27 @@ public class ColourImageView extends ImageView
      */
     private void fillColorToSameArea(int x, int y)
     {
-        Bitmap bm = mBitmap;
-
-        int pixel = bm.getPixel(x, y);
+        if(mCustomBitmap == null){
+            return;
+        }
+        int pixel = mCustomBitmap.getPixel(x, y);
         if (pixel == Color.TRANSPARENT || (hasBorderColor && mBorderColor == pixel))
         {
             return;
         }
         int newColor = randomColor();
 
-        int w = bm.getWidth();
-        int h = bm.getHeight();
+        int w = mCustomBitmap.getWidth();
+        int h = mCustomBitmap.getHeight();
         //拿到该bitmap的颜色数组
         int[] pixels = new int[w * h];
-        bm.getPixels(pixels, 0, w, 0, 0, w, h);
+        mCustomBitmap.getPixels(pixels, 0, w, 0, 0, w, h);
         //填色
         fillColor(pixels, w, h, pixel, newColor, x, y);
         //重新设置bitmap
-        bm.setPixels(pixels, 0, w, 0, 0, w, h);
-        setImageDrawable(new BitmapDrawable(bm));
-
+        mCustomBitmap.setPixels(pixels, 0, w, 0, 0, w, h);
+//        setImageDrawable(new BitmapDrawable(bm));
+        setImageBitmap(mCustomBitmap);
     }
 
 
