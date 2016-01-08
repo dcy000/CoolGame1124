@@ -16,15 +16,15 @@
         <activity
             android:name=".activity.MainActivity"
             android:label="@string/app_name" >
-
-        </activity>
-        <activity
-            android:name=".activity.DrawSelfActivity"
-            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.DrawSelfActivity"
+            android:screenOrientation="portrait">
+
         </activity>
         <meta-data android:name="UMENG_APPKEY" android:value="56545f8f67e58e6db800200d"></meta-data>
         <meta-data android:name="UMENG_CHANNEL" android:value="dcy"/>

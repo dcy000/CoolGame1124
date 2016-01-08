@@ -64,8 +64,10 @@ public class ColourImageView extends ImageView
             //根据drawable，去得到一个和view一样大小的bitmap
             BitmapDrawable drawable = (BitmapDrawable) getDrawable();
             Bitmap bm = drawable.getBitmap();
-            mOriginBitmap = Bitmap.createScaledBitmap(bm, getMeasuredWidth(), getMeasuredHeight(), false);
-            mCustomBitmap = Bitmap.createBitmap(mOriginBitmap);
+            if(mOriginBitmap == null){
+                mOriginBitmap = Bitmap.createScaledBitmap(bm, getMeasuredWidth(), getMeasuredHeight(), false);
+                mCustomBitmap = Bitmap.createBitmap(mOriginBitmap);
+            }
             Log.i("mylog", "222222222222222222222222222222222");
         }
     }
